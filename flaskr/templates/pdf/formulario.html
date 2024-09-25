@@ -15,7 +15,7 @@
     .total-cell {
         text-align: center; /* Centraliza o conteúdo */
         font-weight: bold; /* Deixa o texto em negrito */
-        font-size: 30px; /* Tamanho da fonte para os inputs */
+        font-size: 25px; /* Tamanho da fonte para os inputs */
         
     } 
 
@@ -25,6 +25,10 @@
     
     .input-number {
         -moz-appearance: textfield;
+    }
+
+    th {
+        text-align: center; /* Centraliza o conteúdo */
     }
 
 </style>
@@ -37,12 +41,20 @@
 </body>
 <footer>
     <form method="POST" action="/">
+
+        <!-- nome do cliente -->
+        <td style="width: 100px;">
+            <div class="input-group input-group-sm" >
+                <span class="input-group-text">Nome</span>
+                <input type="text" name="nomeCliente" class="form-control" style="border-color: lightgray;" placeholder="Cliente">
+            </div>
+        </td>
+
         <table class="table-bordered table-responsive" id="tabelaProdutos">
             <thead>
                 <tr>
                     <th scope="col"></th>
                     <th scope="col">Data de Venda</th>
-                    <th scope="col">Cliente</th>
                     <th scope="col">Produtos</th>
                     <th scope="col">Quantidade</th>
                     <th scope="col">P.Unitário</th>
@@ -60,17 +72,11 @@
                         <!-- data -->
                         <td style="width: 1px;">
                             <div class="input-group input-group-sm">
-                                <input type="date" name="data{{i}}" class="datePicker form-control">
-                            </div>
-                        </td>
-                        <!-- nome do cliente -->
-                        <td style="width: 100px;">
-                            <div class="input-group input-group-sm" >
-                                <input type="text" name="nomeCliente{{i}}" class="form-control" placeholder="Cliente">
+                                <input type="date" name="data{{i}}" class="form-control">
                             </div>
                         </td>
                         <!-- nome do produto -->
-                        <td style="width: 200px;">
+                        <td style="width: 280px;">
                             <div class="input-group input-group-sm" >
                                 <input type="text" name="nomeProduto{{i}}" class="form-control" placeholder="Nome do Produto">
                             </div>
@@ -89,10 +95,10 @@
                             </div>
                         </td>
                         <!-- subtotal = produto * quantidade -->
-                        <td style="width: 100px;">
+                        <td style="width: 130px;">
                             <div class="input-group input-group-sm" id="subTotDiv">
                                 <span class="input-group-text">R$</span>
-                                <input name="subTo{{i}}" class="form-control" oninput="calcularTotal()" placeholder="SubTo" id="subTo{{i}}" value="0,00" disabled>
+                                <input type="text" name="subTo{{i}}" class="form-control" oninput="calcularTotal(); this.value = this.value.replace(/[^0-9,.]/g, '')" placeholder="SubTo" id="subTo{{i}}" value="0,00" readonly>
                             </div>
                         </td>  
                     </tr> 
@@ -100,8 +106,9 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" class="total-cell" style="text-align: right;" >Total: </td>
-                    <td colspan="2" class="total-cell" id="valorTotal">00,00</td>
+                    <td colspan="4" class="total-cell" style="text-align: right;" >Total: </td>
+                    <td colspan="2" class="total-cell" id="valorTotaltd">00,00</td>
+                    <input name="valorTotal" type="hidden" id="valorTotal">
                 </tr>
             </tfoot>
         </table>
@@ -111,18 +118,17 @@
 </footer>
 
 
-<script>
-    const datePickers = document.querySelectorAll('.datePicker');
-    const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
-    datePickers.forEach(input => {
-        input.value = today; // Define a data atual para todos os inputs de data
-    });
-
+<script>    
     function checarCheckbox(Id)  {
         const checkbox = document.getElementById(`checkbox${Id}`);
         const isChecked = checkbox.checked;
 
         return isChecked;
+    }
+
+    function formatarParaNumero(valor) {
+        // Remove os pontos e substitui a vírgula por ponto
+        return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
     }
 
     const resetarCheckbox = (Id) => {
@@ -132,10 +138,10 @@
 
         if (!isChecked) {
             document.getElementById(`subTo${Id}`).value = num;
-            document.getElementById(`subTo${Id}`).disabled = false;
+            document.getElementById(`subTo${Id}`).readOnly = false;
         } else {
             calcularSubTotal(Id);
-            document.getElementById(`subTo${Id}`).disabled = true;
+            document.getElementById(`subTo${Id}`).readOnly = true;
         }
     }
 
@@ -187,7 +193,7 @@
             var total = preco * quantidade;
 
             // Exibe o total formatado como moeda
-            document.getElementById(`subTo${Id}`).value = total.toFixed(2);
+            document.getElementById(`subTo${Id}`).value = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             calcularTotal();
         
@@ -197,14 +203,20 @@
         var celulas = document.querySelectorAll('#subTotDiv');
         var range = celulas.length;
 
-        var total = 0;
+        var total = parseFloat(0);
         for (let i = 0; i < range; i++) {
-            var preco = parseFloat(document.getElementById(`subTo${i}`).value) || 0;
+            var preco_nao_formatado = document.getElementById(`subTo${i}`).value;
+
+            let preco = formatarParaNumero(preco_nao_formatado);
+
+            
             
             var total = total + preco;
         };
 
-        document.getElementById('valorTotal').innerHTML = total.toFixed(2);
+        var total = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('valorTotaltd').innerHTML = total
+        document.getElementById('valorTotal').value = total
     }
 </script>
 
