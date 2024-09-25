@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
+from core import organizar_infos
+from core.pdfmaker import pdf
 
 app = Flask(__name__)
 
@@ -7,11 +9,13 @@ def form():
     if request.method == 'POST':
         dados = request.form.to_dict()
         
+        infos = organizar_infos.start(dados)
         
-        for campo, valor in dados.items():
-            print(f"{campo}: {valor}")
-            
-        print(dados)
+        tabela = infos['tabela']
+        print(infos)
+        
+        pdf.make_pdf(tabela)
+        
         
         return redirect(url_for('success'))
 

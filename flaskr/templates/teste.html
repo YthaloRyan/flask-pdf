@@ -1,18 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Iframe</title>
+    <title>Input de Dinheiro</title>
+    <style>
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+        }
+    </style>
 </head>
 <body>
-    <iframe id="textfile" src="{{ url_for('static', filename='tabela_exemplo_6_itens.pdf') }}"></iframe>
-    <button onclick="printIframe()">Print</button>
-    <script type="text/javascript">
-        function printIframe() {
-            var iframe = document.getElementById('textfile');
-            iframe.contentWindow.print();
-        }
+
+    <label for="moneyInput">Valor (R$):</label>
+    <input type="text" id="moneyInput" placeholder="0,00">
+    
+
+    <script>
+        const moneyInput = document.getElementById('moneyInput');
+
+        moneyInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+
+            // Remove todos os caracteres que não sejam números
+            value = value.replace(/\D/g, '');
+
+            // Adiciona vírgula para os centavos
+            value = (value / 100).toFixed(2).replace('.', ',');
+
+            // Adiciona pontos para separar os milhares
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            // Atualiza o valor no campo de input
+            e.target.value = value;
+        });
     </script>
+
 </body>
 </html>

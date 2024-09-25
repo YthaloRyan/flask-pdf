@@ -91,14 +91,14 @@
                         <td  style="width: 100px;">
                             <div class="input-group input-group-sm">
                                 <span class="input-group-text">R$</span>
-                                <input type="number" name="preco{{i}}" oninput="precoAcionado('{{i}}')" id="preco{{i}}" class="input-number form-control" placeholder="Preço">
+                                <input type="text" name="preco{{i}}" oninput="precoAcionado('{{i}}')" id="preco{{i}}" class="input-number form-control" placeholder="Preço">
                             </div>
                         </td>
                         <!-- subtotal = produto * quantidade -->
                         <td style="width: 130px;">
                             <div class="input-group input-group-sm" id="subTotDiv">
                                 <span class="input-group-text">R$</span>
-                                <input type="text" name="subTo{{i}}" class="form-control" oninput="calcularTotal(); this.value = this.value.replace(/[^0-9,.]/g, '')" placeholder="SubTo" id="subTo{{i}}" value="0,00" readonly>
+                                <input type="text" name="subTo{{i}}" class="form-control" oninput="subTotAcionado('{{i}}');" id="subTo{{i}}" placeholder="0,00"  readonly>
                             </div>
                         </td>  
                     </tr> 
@@ -128,27 +128,36 @@
 
     function formatarParaNumero(valor) {
         // Remove os pontos e substitui a vírgula por ponto
-        return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+        var valor_formatado = parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+        return valor_formatado;
     }
 
     const resetarCheckbox = (Id) => {
         const isChecked = checarCheckbox(Id);
+        var preco = parseFloat(document.getElementById(`preco${Id}`).value) || 0;
 
         var num = 0;
 
         if (!isChecked) {
-            document.getElementById(`subTo${Id}`).value = num;
+            
             document.getElementById(`subTo${Id}`).readOnly = false;
         } else {
-            calcularSubTotal(Id);
+            precoAcionado(Id);
             document.getElementById(`subTo${Id}`).readOnly = true;
+            if (preco){
+                calcularSubTotal(Id);
+            } else {
+                document.getElementById(`subTo${Id}`).value = 0;
+            }
+
+            
         }
     }
 
 
     const qtdAcionado = (Id) => {
-        console.log(Id);
         const isChecked = checarCheckbox(Id);
+        var preco = parseFloat(document.getElementById(`preco${Id}`).value) || 0;
 
         if (isChecked) {
             var quantidade = parseInt(document.getElementById(`qtd${Id}`).value) || 0;
@@ -157,7 +166,9 @@
                 document.getElementById(`qtd${Id}`).value = quantidade;
             }
 
-            calcularSubTotal(Id);
+            if (preco) {
+                calcularSubTotal(Id);
+            }
         }
 
         
@@ -175,25 +186,42 @@
         
                     document.getElementById(`qtd${Id}`).value = quantidade;
                 }
+
+                calcularSubTotal(Id);
             }
             
-    
-            calcularSubTotal(Id);
         }
         
     }
 
+    const subTotAcionado = (Id) => {
+        var subTo = parseFloat(document.getElementById(`subTo${Id}`).value) || 0;
+
+        document.getElementById(`subTo${Id}`).value = subTo;
+
+
+        calcularTotal();
+    }
+
+
 
     const calcularSubTotal = (Id) => {
             // Obtém os valores de preço e quantidade
-            var preco = parseFloat(document.getElementById(`preco${Id}`).value) || 0;
+            var preco_nao_formatado = document.getElementById(`preco${Id}`).value;
+
+
+            let preco = formatarParaNumero(preco_nao_formatado);
+
             var quantidade = parseInt(document.getElementById(`qtd${Id}`).value) || 0;
+
 
             // Calcula o total
             var total = preco * quantidade;
 
             // Exibe o total formatado como moeda
-            document.getElementById(`subTo${Id}`).value = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            var total = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+            document.getElementById(`subTo${Id}`).value = total;
 
             calcularTotal();
         
@@ -208,15 +236,18 @@
             var preco_nao_formatado = document.getElementById(`subTo${i}`).value;
 
             let preco = formatarParaNumero(preco_nao_formatado);
-
             
+            
+            if (!preco) {
+                preco = 0;
+            }
             
             var total = total + preco;
         };
 
         var total = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('valorTotaltd').innerHTML = total
-        document.getElementById('valorTotal').value = total
+        document.getElementById('valorTotaltd').innerHTML = total;
+        document.getElementById('valorTotal').value = total;
     }
 </script>
 
