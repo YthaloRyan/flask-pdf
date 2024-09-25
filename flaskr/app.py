@@ -12,9 +12,11 @@ def form():
         infos = organizar_infos.start(dados)
         
         tabela = infos['tabela']
+        cliente = infos['nomeCliente']
+        valortotal = infos['valorTotal']
         print(infos)
         
-        pdf.make_pdf(tabela)
+        pdf.make_pdf(tabela, cliente, valortotal)
         
         
         return redirect(url_for('success'))

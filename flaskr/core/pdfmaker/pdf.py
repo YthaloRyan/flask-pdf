@@ -12,7 +12,7 @@ from flask import url_for
 import os
 
 # Configurando o arquivo PDF
-def make_pdf(tabela):
+def make_pdf(tabela, cliente, valortotal):
     base_path = os.path.dirname(os.path.abspath(__file__))  # Diretório atual (pdfmaker)
     logo_url = os.path.join(base_path, 'static', 'logo.png')
     # logo_url = url_for('static', filename='logo.png')
@@ -22,7 +22,7 @@ def make_pdf(tabela):
 
     
     
-    tabela = tabelapdf.makeTable(tabela)
+    tabela = tabelapdf.makeTable(tabela, cliente, valortotal)
 
     imagem = Image(logo_url)  # Substitua pelo caminho da sua imagem
     imagem.width = 250  # Largura da imagem

@@ -9,7 +9,7 @@ def formatar_preco(preco):
         # Substitui vírgula por ponto para conversão
         preco += ',00'
     
-    preco = float(preco.replace(',', '.'))
+    preco = float(preco.replace('.', '').replace(',', '.'))
     
     valor_formatado = locale.currency(preco, grouping=True).replace('R$ ', '')
     

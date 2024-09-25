@@ -5,7 +5,7 @@ from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 
-def makeTable(tabela):
+def makeTable(tabela, cliente, valortotal):
     # Dados da tabela (6 itens por linha)
     styles = getSampleStyleSheet()
     normal_style = styles['Normal']
@@ -13,7 +13,7 @@ def makeTable(tabela):
     large_font_style = ParagraphStyle(name='LargeFont', fontSize=14)
     
     tabela_header = ['Data de Venda', 'Produtos', 'Quantidade', 'P. Unitário', 'SubTotal']
-    tabela_footer = ['','','','Total','R$ 100,000,00']
+    tabela_footer = ['','','','Total',f'R$ {valortotal}']
     
     tabela.insert(0, tabela_header)
     tabela.append(tabela_footer)
