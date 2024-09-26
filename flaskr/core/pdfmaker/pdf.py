@@ -5,7 +5,7 @@ from reportlab.lib.units import cm
 
 from reportlab.pdfgen import canvas
 
-from .tools.tabelapdf import tabelapdf
+from tools.tabelapdf import tabelapdf
 
 from flask import url_for
 
@@ -22,24 +22,33 @@ def make_pdf(tabela, cliente, valortotal):
 
     
     
-    tabela = tabelapdf.makeTable(tabela, cliente, valortotal)
+    tabela = tabelapdf.makeTable(tabela, valortotal)
 
     imagem = Image(logo_url)  # Substitua pelo caminho da sua imagem
-    imagem.width = 250  # Largura da imagem
-    imagem.height = 150  # Altura da imagem
+    imagem.width = 200  # Largura da imagem
+    imagem.height = 120  # Altura da imagem
 
     # Criação do PDF
     from reportlab.pdfgen import canvas
 
     def create_pdf(canvas):
         # Posicionar a imagem em coordenadas (x, y)
-        x = 20  # coordenada x
-        y = 680  # coordenada y
+        x = 30  # coordenada x
+        y = 700  # coordenada y
         canvas.drawImage(logo_url, x, y, width=imagem.width, height=imagem.height)  # Desenhar a imagem
+        
+        canvas.setStrokeColorRGB(0, 0, 0)  # Definindo a cor da linha (preto)
+        canvas.setLineWidth(1)  # Definindo a espessura da linha
+        canvas.line(30, 630, 565, 630)  # Linha da coordenada (100, 720) até (500, 720)
+        
+        canvas.setFont("Helvetica", 15
+                       )
+
+        canvas.drawString(30, 600, f"Nome: {cliente}")
 
         # Adicionar a tabela
         tabela.wrapOn(canvas, 0, 0)
-        tabela.drawOn(canvas, 20, 200)  # Posicionar a tabela
+        tabela.drawOn(canvas, 30, 150)  # Posicionar a tabela
 
     # Gerar o PDF
     canvas = canvas.Canvas(pdf_file, pagesize=A4)
@@ -47,3 +56,13 @@ def make_pdf(tabela, cliente, valortotal):
     canvas.save()
 
     print(f"PDF '{pdf_file}' criado com sucesso.")
+    
+    
+dados = {'tabela': [['05/09/2024', 'Produto 1', '5', '15,00', '75,00'], ['09/09/2024', 'Produto 2', '3', '10,00', '15,00'], ['16/09/2024', 'Produto 3', '8', '5,50', '44,00'], ['01/09/2024', 'Produto 4', '1', '1.256,00', '1.256,00'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']], 'nomeCliente': 'Carlos Pereira Brito', 'valorTotal': '1.390,00'}
+
+tabela = dados['tabela']
+cliente = dados['nomeCliente']
+valortotal = dados['valorTotal']
+
+
+make_pdf(tabela=tabela, cliente=cliente, valortotal = valortotal)

@@ -5,7 +5,7 @@ from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 
-def makeTable(tabela, cliente, valortotal):
+def makeTable(tabela, valortotal):
     # Dados da tabela (6 itens por linha)
     styles = getSampleStyleSheet()
     normal_style = styles['Normal']
@@ -23,12 +23,12 @@ def makeTable(tabela, cliente, valortotal):
     page_width = A4[0]
 
     # Define uma margem
-    margin = 20  # Margem de 20 pontos em cada lado
+    margin = 30  # Margem de 20 pontos em cada lado
 
     # Largura da tabela com margens
     table_width = page_width - 2 * margin
     print(table_width)
-    col_widths = [65,220,55,85,130]  # Largura igual para cada coluna
+    col_widths = [75,200,65,80,115]  # Largura igual para cada coluna
     print(sum(col_widths))
 
 
@@ -42,9 +42,12 @@ def makeTable(tabela, cliente, valortotal):
     style = TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Centraliza o texto
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Fonte do cabeçalho em negrito
-        ('FONTSIZE', (0, 0), (-1, -1), 9),  # Tamanho da fonte no rodapé
+        ('FONTSIZE', (0, 0), (-1, 0), 10),  # Tamanho da fonte
+        ('FONTSIZE', (1, 1), (-1, -1), 10),  # Tamanho da fonte
         ('BACKGROUND', (0, 0), (-1, -1), colors.white),  # Fundo das células em bege
         ('GRID', (0, 0), (-1, -1), 0.2, colors.lightgrey),  # Adiciona linhas entre as células
+        ('TOPPADDING', (0, 0), (-1, -1), 6),  # Espaço em cima do cabeçalho
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),  # Espaço embaixo do cabeçalho
         
         # Estilo do rodapé
         
