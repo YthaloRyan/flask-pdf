@@ -6,6 +6,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def form():
+    pdf_path = url_for('static', 'nota.pdf')
+    
     if request.method == 'POST':
         dados = request.form.to_dict()
         
@@ -23,7 +25,7 @@ def form():
         print(pdf_path)
         
         
-        canvas = pdf.make_pdf(tabela, cliente, valortotal, pdf_file=pdf_path)
+        canvas = pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal, pdf_file=pdf_path)
         
         canvas.save()
         
