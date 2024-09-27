@@ -37,10 +37,10 @@
 </head>
 <body>
     
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br>
 </body>
 <footer>
-    <form method="POST" action="/">
+    <form id="tabelaForm" method="POST" action="/">
 
         <!-- nome do cliente -->
         <td style="width: 100px;">
@@ -63,11 +63,11 @@
             </thead>
             
             <tbody>
-                {% for i in range(15) %}
+                {% for i in range(20) %}
                     <tr style="size: 8px;">
                         <!-- checkbox desativa calculadora -->
                         <td style="width: 10px;">
-                            <input class="form-check-input" type="checkbox" value="" id="checkbox{{i}}" checked onclick="resetarCheckbox('{{i}}')" style="text-align: center;">
+                            <input class="form-check-input" type="checkbox" value="" id="checkbox{{i}}" checked oninput="resetarCheckbox('{{i}}')" style="text-align: center;">
                         </td>
                         <!-- data -->
                         <td style="width: 1px;">
@@ -84,21 +84,21 @@
                         <!-- quantidade do produto    -->
                         <td  style="width: 5px;">
                             <div class="input-group input-group-sm">
-                                <input type="number" name="qtd{{i}}" oninput="qtdAcionado('{{i}}')" id="qtd{{i}}" class="input-number form-control" placeholder="Qtd">
+                                <input type="number" name="qtd{{i}}" oninput="teclaAcionada('{{i}}')" id="qtd{{i}}" class="input-number form-control" placeholder="Qtd">
                             </div>
                         </td>
                         <!-- preco do produto -->
                         <td  style="width: 100px;">
                             <div class="input-group input-group-sm">
                                 <span class="input-group-text">R$</span>
-                                <input type="text" name="preco{{i}}" oninput="precoAcionado('{{i}}')" id="preco{{i}}" class="input-number form-control" placeholder="Preço">
+                                <input type="text" name="preco{{i}}" oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}');" id="preco{{i}}" class="input-number form-control" placeholder="Preço">
                             </div>
                         </td>
                         <!-- subtotal = produto * quantidade -->
                         <td style="width: 130px;">
-                            <div class="input-group input-group-sm" id="subTotDiv">
+                            <div class="input-group input-group-sm" id="subToDiv">
                                 <span class="input-group-text">R$</span>
-                                <input type="text" name="subTo{{i}}" class="form-control" oninput="subTotAcionado('{{i}}');" id="subTo{{i}}" placeholder="0,00"  readonly>
+                                <input type="text" name="subTo{{i}}" class="form-control" oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}')" id="subTo{{i}}" placeholder="0,00"  value=0.00 readonly>
                             </div>
                         </td>  
                     </tr> 
@@ -107,18 +107,22 @@
             <tfoot>
                 <tr>
                     <td colspan="4" class="total-cell" style="text-align: right;" >Total: </td>
-                    <td colspan="2" class="total-cell" id="valorTotaltd">00,00</td>
+                    <td colspan="2" class="total-cell" id="valorTotaltd">0,00</td>
                     <input name="valorTotal" type="hidden" id="valorTotal">
                 </tr>
             </tfoot>
         </table>
 
-        <button type="submit" class="btn btn-success" value="Enviar">Success</button>
+        <button type="button" onclick="enviarFormulario()" class="btn btn-success" value="Enviar">Success</button>
     </form>
+
+    <iframe id="textfile" src="{{ url_for('static', filename='tabela_exemplo_6_itens.pdf') }}" style="display:none;"></iframe>
+
+    <script src="{{ url_for('static', filename='js/formulario.js') }}"></script>
 </footer>
 
 
-<script>    
+<!-- <script>    
     function checarCheckbox(Id)  {
         const checkbox = document.getElementById(`checkbox${Id}`);
         const isChecked = checkbox.checked;
@@ -228,7 +232,7 @@
     }
 
     const calcularTotal = () => {
-        var celulas = document.querySelectorAll('#subTotDiv');
+        var celulas = document.querySelectorAll('#subToDiv');
         var range = celulas.length;
 
         var total = parseFloat(0);
@@ -249,5 +253,5 @@
         document.getElementById('valorTotaltd').innerHTML = total;
         document.getElementById('valorTotal').value = total;
     }
-</script>
+</script> -->
 

@@ -5,11 +5,12 @@ def formatar_preco(preco):
     if not preco:
         return ''
     
-    if len(preco) <= 3:
-        # Substitui vírgula por ponto para conversão
-        preco += ',00'
     
-    preco = float(preco.replace('.', '').replace(',', '.'))
+    
+    
+    
+    preco = float(preco.replace(',', '.'))
+    print(preco)
     
     valor_formatado = locale.currency(preco, grouping=True).replace('R$ ', '')
     
@@ -34,11 +35,10 @@ def start(infos):
     for info in infos:
         id = ''.join((i for i in info if i.isdigit() ))
         
-        if infos[info] == '0':
+        if infos[info] == '0,00':
             infos[info] = ''  
         
-        if 'preco' in info or 'subTo' in info:
-            infos[info] = formatar_preco(infos[info])
+        
             
         if 'data' in info:
             infos[info] = formatar_data(infos[info])

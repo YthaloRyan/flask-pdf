@@ -9,17 +9,26 @@ def form():
     if request.method == 'POST':
         dados = request.form.to_dict()
         
+        print(dados)
+        
+        
         infos = organizar_infos.start(dados)
         
         tabela = infos['tabela']
         cliente = infos['nomeCliente']
         valortotal = infos['valorTotal']
-        print(infos)
         
-        pdf.make_pdf(tabela, cliente, valortotal)
+        pdf_path = url_for('static', 'nota.pdf')
+        
+        print(pdf_path)
         
         
-        return redirect(url_for('success'))
+        canvas = pdf.make_pdf(tabela, cliente, valortotal, pdf_file=pdf_path)
+        
+        canvas.save()
+        
+        
+        
 
     return render_template('base.html')
 
