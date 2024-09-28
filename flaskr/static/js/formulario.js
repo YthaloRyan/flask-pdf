@@ -98,7 +98,6 @@ const calcularTotal = () => {
     for (let i = 0; i < range_subTo; i++) {
         var preco = (QsId(`subTo${i}`).value || '0');
 
-        console.log('Indo Formatar')
         
         preco = formatarParaNumero(preco);
         
@@ -154,3 +153,31 @@ function enviarFormulario() {
 
     
 };
+function coletarNumero(Id) {
+    var preco = (QsId(Id).value || '0');
+
+    if (preco == '0') {
+        return ''
+    }
+        
+    
+    preco = formatarParaNumero(preco);
+    preco = preco.toLocaleString('pt-br', {minimumFractionDigits: 2});
+
+    return preco
+}
+
+function finalizarNumeros() {
+    const lista_subTo = document.querySelectorAll('#subToDiv');
+    var range_subTo = lista_subTo.length;
+    
+
+    for (let i = 0; i < range_subTo; i++) {
+        QsId(`preco${i}`).value = coletarNumero(`preco${i}`);
+
+        QsId(`subTo${i}`).value = coletarNumero(`subTo${i}`);
+    }
+
+    var iframe = document.getElementById('notaPdf');
+    iframe.src = iframe.src;
+}

@@ -6,60 +6,60 @@ import time
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def form_():
-    if request.method == 'POST':
-        dados = request.form.to_dict()
+    # if request.method == 'POST':
+    #     dados = request.form.to_dict()
         
-        print(dados)
-        
-        
-        infos = organizar_infos.start(dados)
-        
-        tabela = infos['tabela']
-        cliente = infos['nomeCliente']
-        valortotal = infos['valorTotal']
-        
-        pdf_path = './static/nota.pdf'
-        
-        print(pdf_path)
+    #     print(dados)
         
         
-        canvas = pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal, pdf_file=pdf_path)
+    #     infos = organizar_infos.start(dados)
         
-        canvas.save()
+    #     tabela = infos['tabela']
+    #     cliente = infos['nomeCliente']
+    #     valortotal = infos['valorTotal']
         
-    
-    else:
-    
-        return render_template('base.html')
+    #     pdf_path = './static/nota.pdf'
+        
+    #     print(pdf_path)
+        
+        
+    #     canvas = pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal, pdf_file=pdf_path)
+        
+    #     canvas.save()
         
     
-@app.route('/send', methods=['GET', 'POST'])
-def send():
-    if request.method == 'POST':
-        dados = request.form.to_dict()
+    # else:
+    
+    return render_template('base.html')
         
-        print(dados)
+    
+# @app.route('/send', methods=['GET', 'POST'])
+# def send():
+#     if request.method == 'POST':
+#         dados = request.form.to_dict()
         
-        
-        infos = organizar_infos.start(dados)
-        
-        tabela = infos['tabela']
-        cliente = infos['nomeCliente']
-        valortotal = infos['valorTotal']
-        
-        pdf_path = './static/nota.pdf'
-        
-        print(pdf_path)
+#         print(dados)
         
         
-        canvas = pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal, pdf_file=pdf_path)
+#         infos = organizar_infos.start(dados)
         
-        canvas.save()
+#         tabela = infos['tabela']
+#         cliente = infos['nomeCliente']
+#         valortotal = infos['valorTotal']
+        
+#         pdf_path = './static/nota.pdf'
+        
+#         print(pdf_path)
+        
+        
+#         canvas = pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal, pdf_file=pdf_path)
+        
+#         canvas.save()
         
 
-    return None
+#     return None
         
 
     
@@ -79,6 +79,30 @@ def teste():
 @app.route('/ajax')
 def form():
     return render_template('form_ajax.html')
+
+
+@app.route('/submit_form', methods=['POST'])
+def submit_form():
+    dados = request.get_json()
+    
+    infos = organizar_infos.start(dados)
+    
+    tabela = infos['tabela']
+    cliente = infos['nomeCliente']
+    valortotal = infos['valorTotal']
+    
+    pdf_path = './static/nota.pdf'
+    
+    print(pdf_path)
+    
+    
+    canvas = pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal, pdf_file=pdf_path)
+    
+    canvas.save()
+    
+    
+    
+    return jsonify(message='opa')
 
 @app.route('/submit_ajax', methods=['POST'])
 def submit_ajax():

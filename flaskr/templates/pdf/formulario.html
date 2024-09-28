@@ -33,14 +33,50 @@
 
 </style>
 <head>
-    {% include 'pdf/topoa4.html' %}
+    <script src="{{ url_for('static', filename='js/formulario.js') }}"></script>
+
+    <script>
+        async function handleSubmit(event) {
+            console.log('entrei aqui');
+            event.preventDefault();  // Evita o reload da página
+            
+            finalizarNumeros();
+
+            // Coletando os dados do formulário
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+      
+            // Enviando dados via fetch
+            const response = await fetch('/submit_form', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+            });
+      
+            // Manipulando a resposta
+            const result = await response;
+            //document.getElementById('result').innerText = `Response: ${result.message}`;
+            const pdfUrl = '/static/nota.pdf';
+            const iframe = document.getElementById('notaPdf');
+            iframe.src = pdfUrl;
+            
+            
+            setTimeout(() => {
+                iframe.contentWindow.print(); // Chama a função de impressão do conteúdo do iframe
+                
+            }, 100);
+          }
+    </script>
 </head>
 <body>
+    {% include 'pdf/topoa4.html' %}
     
-    <br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br>
 </body>
 <footer>
-    <form id="tabelaForm" method="POST" action="/send">
+    <form id="tabelaForm" onsubmit="handleSubmit(event)">
 
         <!-- nome do cliente -->
         <td style="width: 100px;">
@@ -113,12 +149,12 @@
             </tfoot>
         </table>
 
-        <button type="button" onclick="enviarFormulario()" class="btn btn-success" value="Enviar">Success</button>
+        <button type="submit" class="btn btn-success" value="Enviar">Imprimir</button>
     </form>
 
     <iframe id="notaPdf" src="{{ url_for('static', filename='nota.pdf') }}" style="display:none;"></iframe>
 
-    <script src="{{ url_for('static', filename='js/formulario.js') }}"></script>
+    
 
     
 </footer>
