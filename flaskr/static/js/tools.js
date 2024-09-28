@@ -1,1 +1,0 @@
-const QsId = (el) => document.getElementById(el);

@@ -53,11 +53,7 @@ const resetarCheckbox = (Id) => {
 }
 
 
-//checar se á quantidade
-
-
-
-//Receber onclick Inputs
+//Receber onclick Inputs [qtd, preco, subtotal]
 const teclaAcionada = (Id) => {
     const isChecked = checarCheckbox(Id);
     
@@ -97,14 +93,10 @@ const calcularTotal = () => {
     var total = 0;
     for (let i = 0; i < range_subTo; i++) {
         var preco = (QsId(`subTo${i}`).value || '0');
-
-        
         preco = formatarParaNumero(preco);
         
         
         total = total + preco;
-
-        
     }
 
     
@@ -116,43 +108,7 @@ const calcularTotal = () => {
 }
 
 
-//Formatar os input antes de enviar formulario
-function enviarFormulario() {
-    // Captura o formulário
-    var formulario = document.getElementById('tabelaForm');
-
-    const lista_subTo = document.querySelectorAll('#subToDiv');
-    var range_subTo = lista_subTo.length;
-
-    for (let i = 0; i < range_subTo; i++) {
-        var preco = (QsId(`preco${i}`).value || '0');
-        preco = formatarParaNumero(preco);
-        preco = preco.toLocaleString('pt-br', {minimumFractionDigits: 2});
-
-        QsId(`preco${i}`).value = preco;
-
-        var subTopreco = (QsId(`subTo${i}`).value || '0');
-        subTopreco = formatarParaNumero(subTopreco);
-        subTopreco = subTopreco.toLocaleString('pt-br', {minimumFractionDigits: 2});
-
-        QsId(`subTo${i}`).value = subTopreco;
-    }
-
-    
-    
-
-    // Submete o formulário
-    formulario.submit();
-
-
-
-    var iframe = document.getElementById('notaPdf');
-    
-
-    iframe.contentWindow.print();
-
-    
-};
+//Coleta um value e transforma em dinheiro
 function coletarNumero(Id) {
     var preco = (QsId(Id).value || '0');
 
@@ -160,13 +116,13 @@ function coletarNumero(Id) {
         return ''
     }
         
-    
     preco = formatarParaNumero(preco);
     preco = preco.toLocaleString('pt-br', {minimumFractionDigits: 2});
 
     return preco
 }
 
+//formata todos os valores do input para dinheiro
 function finalizarNumeros() {
     const lista_subTo = document.querySelectorAll('#subToDiv');
     var range_subTo = lista_subTo.length;

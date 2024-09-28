@@ -1,0 +1,31 @@
+.table-bordered {
+    font-size: 12px; /* Tamanho da fonte para a tabela */
+    border-color: lightgray;
+    
+    
+}
+
+.form-control {
+    font-size: 8px; /* Tamanho da fonte para os inputs */
+    size: 8px;
+    border-color: white;
+}
+
+.total-cell {
+    text-align: center; /* Centraliza o conteúdo */
+    font-weight: bold; /* Deixa o texto em negrito */
+    font-size: 25px; /* Tamanho da fonte para os inputs */
+    
+} 
+
+.input-number::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.input-number {
+    -moz-appearance: textfield;
+}
+
+th {
+    text-align: center; /* Centraliza o conteúdo */
+}

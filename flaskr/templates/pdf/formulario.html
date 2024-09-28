@@ -1,160 +1,102 @@
-<style>
-    .table-bordered {
-        font-size: 12px; /* Tamanho da fonte para a tabela */
-        border-color: lightgray;
-        
-        
-    }
+{% extends "base.html" %}
 
-    .form-control {
-        font-size: 8px; /* Tamanho da fonte para os inputs */
-        size: 8px;
-        border-color: white;
-    }
-
-    .total-cell {
-        text-align: center; /* Centraliza o conteúdo */
-        font-weight: bold; /* Deixa o texto em negrito */
-        font-size: 25px; /* Tamanho da fonte para os inputs */
-        
-    } 
-
-    .input-number::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-    }
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
     
-    .input-number {
-        -moz-appearance: textfield;
-    }
+{% endblock%}
 
-    th {
-        text-align: center; /* Centraliza o conteúdo */
-    }
+{% block content %}
+    <head>
+        <script src="{{ url_for('static', filename='js/formulario.js') }}"></script>
 
-</style>
-<head>
-    <script src="{{ url_for('static', filename='js/formulario.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/submit_formulario.js') }}"></script>
+    </head>
+    <body>
+        {% include 'pdf/topoa4.html' %}
+        
+        <br><br><br><br><br><br><br><br>
+    </body>
+    <footer>
+        <form id="tabelaForm" onsubmit="handleSubmit(event)">
 
-    <script>
-        async function handleSubmit(event) {
-            console.log('entrei aqui');
-            event.preventDefault();  // Evita o reload da página
-            
-            finalizarNumeros();
+            <!-- nome do cliente -->
+            <td style="width: 100px;">
+                <div class="input-group input-group-sm" >
+                    <span class="input-group-text">Nome</span>
+                    <input type="text" name="nomeCliente" class="form-control" style="border-color: lightgray;" placeholder="Cliente">
+                </div>
+            </td>
 
-            // Coletando os dados do formulário
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-      
-            // Enviando dados via fetch
-            const response = await fetch('/submit_form', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-            });
-      
-            // Manipulando a resposta
-            const result = await response;
-            //document.getElementById('result').innerText = `Response: ${result.message}`;
-            const pdfUrl = '/static/nota.pdf';
-            const iframe = document.getElementById('notaPdf');
-            iframe.src = pdfUrl;
-            
-            
-            setTimeout(() => {
-                iframe.contentWindow.print(); // Chama a função de impressão do conteúdo do iframe
+            <table class="table-bordered table-responsive" id="tabelaProdutos">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Data de Venda</th>
+                        <th scope="col">Produtos</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">P.Unitário</th>
+                        <th scope="col">SubTotal</th>
+                    </tr>
+                </thead>
                 
-            }, 100);
-          }
-    </script>
-</head>
-<body>
-    {% include 'pdf/topoa4.html' %}
-    
-    <br><br><br><br><br><br><br><br>
-</body>
-<footer>
-    <form id="tabelaForm" onsubmit="handleSubmit(event)">
+                <tbody>
+                    {% for i in range(20) %}
+                        <tr style="size: 8px;">
+                            <!-- checkbox desativa calculadora -->
+                            <td style="width: 10px;">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox{{i}}" checked oninput="resetarCheckbox('{{i}}')" style="text-align: center;">
+                            </td>
+                            <!-- data -->
+                            <td style="width: 1px;">
+                                <div class="input-group input-group-sm">
+                                    <input type="date" name="data{{i}}" class="form-control">
+                                </div>
+                            </td>
+                            <!-- nome do produto -->
+                            <td style="width: 280px;">
+                                <div class="input-group input-group-sm" >
+                                    <input type="text" name="nomeProduto{{i}}" class="form-control" placeholder="Nome do Produto">
+                                </div>
+                            </td>
+                            <!-- quantidade do produto    -->
+                            <td  style="width: 5px;">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" name="qtd{{i}}" id="qtd{{i}}" class="input-number form-control" placeholder="Qtd"
+                                    oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}');">
+                                </div>
+                            </td>
+                            <!-- preco do produto -->
+                            <td  style="width: 100px;">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" name="preco{{i}}" id="preco{{i}}" class="input-number form-control" placeholder="Preço"
+                                    oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}');">
+                                </div>
+                            </td>
+                            <!-- subtotal = produto * quantidade -->
+                            <td style="width: 130px;">
+                                <div class="input-group input-group-sm" id="subToDiv">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" name="subTo{{i}}" class="form-control"  placeholder="0,00"  value=0.00 readonly
+                                    oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}')" id="subTo{{i}}">
+                                </div>
+                            </td>  
+                        </tr> 
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="total-cell" style="text-align: right;" >Total: </td>
+                        <td colspan="2" class="total-cell" id="valorTotaltd">0,00</td>
+                        <input name="valorTotal" type="hidden" id="valorTotal">
+                    </tr>
+                </tfoot>
+            </table>
 
-        <!-- nome do cliente -->
-        <td style="width: 100px;">
-            <div class="input-group input-group-sm" >
-                <span class="input-group-text">Nome</span>
-                <input type="text" name="nomeCliente" class="form-control" style="border-color: lightgray;" placeholder="Cliente">
-            </div>
-        </td>
+            <button type="submit" class="btn btn-success" value="Enviar">Imprimir</button>
+        </form>
+        
 
-        <table class="table-bordered table-responsive" id="tabelaProdutos">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Data de Venda</th>
-                    <th scope="col">Produtos</th>
-                    <th scope="col">Quantidade</th>
-                    <th scope="col">P.Unitário</th>
-                    <th scope="col">SubTotal</th>
-                </tr>
-            </thead>
-            
-            <tbody>
-                {% for i in range(20) %}
-                    <tr style="size: 8px;">
-                        <!-- checkbox desativa calculadora -->
-                        <td style="width: 10px;">
-                            <input class="form-check-input" type="checkbox" value="" id="checkbox{{i}}" checked oninput="resetarCheckbox('{{i}}')" style="text-align: center;">
-                        </td>
-                        <!-- data -->
-                        <td style="width: 1px;">
-                            <div class="input-group input-group-sm">
-                                <input type="date" name="data{{i}}" class="form-control">
-                            </div>
-                        </td>
-                        <!-- nome do produto -->
-                        <td style="width: 280px;">
-                            <div class="input-group input-group-sm" >
-                                <input type="text" name="nomeProduto{{i}}" class="form-control" placeholder="Nome do Produto">
-                            </div>
-                        </td>
-                        <!-- quantidade do produto    -->
-                        <td  style="width: 5px;">
-                            <div class="input-group input-group-sm">
-                                <input type="number" name="qtd{{i}}" oninput="teclaAcionada('{{i}}')" id="qtd{{i}}" class="input-number form-control" placeholder="Qtd">
-                            </div>
-                        </td>
-                        <!-- preco do produto -->
-                        <td  style="width: 100px;">
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-text">R$</span>
-                                <input type="text" name="preco{{i}}" oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}');" id="preco{{i}}" class="input-number form-control" placeholder="Preço">
-                            </div>
-                        </td>
-                        <!-- subtotal = produto * quantidade -->
-                        <td style="width: 130px;">
-                            <div class="input-group input-group-sm" id="subToDiv">
-                                <span class="input-group-text">R$</span>
-                                <input type="text" name="subTo{{i}}" class="form-control" oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}')" id="subTo{{i}}" placeholder="0,00"  value=0.00 readonly>
-                            </div>
-                        </td>  
-                    </tr> 
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="total-cell" style="text-align: right;" >Total: </td>
-                    <td colspan="2" class="total-cell" id="valorTotaltd">0,00</td>
-                    <input name="valorTotal" type="hidden" id="valorTotal">
-                </tr>
-            </tfoot>
-        </table>
-
-        <button type="submit" class="btn btn-success" value="Enviar">Imprimir</button>
-    </form>
-
-    <iframe id="notaPdf" src="{{ url_for('static', filename='nota.pdf') }}" style="display:none;"></iframe>
-
-    
-
-    
-</footer>
+        <iframe id="notaPdf" src="{{ url_for('static', filename='nota.pdf') }}" style="display:none;"></iframe>
+    </footer>
+{% endblock %}

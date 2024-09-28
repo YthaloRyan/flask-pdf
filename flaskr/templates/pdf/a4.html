@@ -1,40 +1,18 @@
-<style>
-  body {
-    background: rgb(204,204,204); /* Cor de fundo da página */
-    margin: 0;
-    padding: 0;
-}
-  
-.page {
-    background: white;
-    display: block;
-    margin: 0 auto;
-    margin-top: 0.5cm;
-    margin-bottom: 0.5cm;
-    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5); /* Sombra suave */
-    width: 210mm; /* Largura da folha A4 */
-    height: 297mm; /* Altura da folha A4 */
-    position: relative; /* Necessário se o filho for posicionado */
-}
-  
-.child {
-    width: 90%; /* Proporcional à folha A4 */
-    height: 93%; /* Proporcional à folha A4 */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    
-    transform: translate(-50%, -50%); /* Centraliza o elemento filho */
-}
+{% extends "base.html" %}
 
 
-</style>
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/a4.css') }}">
 
+{% endblock %}
 
+{% block content %}
 
-
-<div class="page">
-  <div class="child">
-      {% include 'pdf/formulario.html' %}
+  <div class="page">
+    <div class="child">
+        {% include 'pdf/formulario.html' %}
+    </div>
   </div>
-</div>
+
+{% endblock %}
+

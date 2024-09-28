@@ -1,21 +1,3 @@
-import locale
-
-def formatar_preco(preco):
-    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-    if not preco:
-        return ''
-    
-    
-    
-    
-    
-    preco = float(preco.replace(',', '.'))
-    print(preco)
-    
-    valor_formatado = locale.currency(preco, grouping=True).replace('R$ ', '')
-    
-    return valor_formatado
-
 def formatar_data(data):
     data = data.split('-')
     
@@ -39,12 +21,10 @@ def start(infos):
             infos[info] = ''  
         
         
-            
         if 'data' in info:
             infos[info] = formatar_data(infos[info])
         
           
-            
         if id in tabela_temporaria:
             tabela_temporaria[id].append(infos[info])
     
