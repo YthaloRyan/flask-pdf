@@ -140,7 +140,17 @@ function enviarFormulario() {
     }
 
     
+    
 
     // Submete o formulário
     formulario.submit();
+
+
+
+    var iframe = document.getElementById('notaPdf');
+    
+
+    iframe.contentWindow.print();
+
+    
 };

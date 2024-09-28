@@ -102,11 +102,11 @@ def make_pdf(tabela, cliente, valortotal, pdf_file):
     return canvas
     
     
-dados = {'tabela': [['05/09/2024', 'Produto 1', '5', '15,00', '75,00'], ['09/09/2024', 'Produto 2', '3', '10,00', '15,00'], ['16/09/2024', 'Produto 3', '8', '5,50', '44,00'], ['01/09/2024', 'Produto 4', '1', '1.256,00', '1.256,00'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']], 'nomeCliente': 'Carlos Pereira Brito', 'valorTotal': '1.390,00'}
+# dados = {'tabela': [['05/09/2024', 'Produto 1', '5', '15,00', '75,00'], ['09/09/2024', 'Produto 2', '3', '10,00', '15,00'], ['16/09/2024', 'Produto 3', '8', '5,50', '44,00'], ['01/09/2024', 'Produto 4', '1', '1.256,00', '1.256,00'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']], 'nomeCliente': 'Carlos Pereira Brito', 'valorTotal': '1.390,00'}
 
-tabela = dados['tabela']
-cliente = dados['nomeCliente']
-valortotal = dados['valorTotal']
+# tabela = dados['tabela']
+# cliente = dados['nomeCliente']
+# valortotal = dados['valorTotal']
 
 
-make_pdf(tabela=tabela, cliente=cliente, valortotal = valortotal)
+# make_pdf(tabela=tabela, cliente=cliente, valortotal = valortotal)
