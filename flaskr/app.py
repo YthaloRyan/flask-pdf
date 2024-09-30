@@ -21,15 +21,24 @@ def submit_form():
     cliente = infos['nomeCliente']
     valortotal = infos['valorTotal']
     
-    pdf_path = './static/nota.pdf'
     
-    canvas = pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal, pdf_file=pdf_path)
+    print(tabela)
+    print('='*20)
+    print(cliente)
+    print('='*20)
+    print(valortotal)
+    pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal)
     
-    canvas.save()
+    
     
     
     
     return jsonify(message='Pdf Gerado')
+
+
+
+
+
 
 
 @app.route('/teste')

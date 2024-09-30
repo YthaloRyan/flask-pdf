@@ -43,10 +43,13 @@ const resetarCheckbox = (Id) => {
 
     if (isChecked) {
         subTo.readOnly = true;
+
+        subTo.style.backgroundColor = '#f8f9fa';
         
         calcularSubTotal(Id);
     } else {
         subTo.readOnly = false;
+        subTo.style.backgroundColor = 'white';
         subTo.value = '';
         
     }

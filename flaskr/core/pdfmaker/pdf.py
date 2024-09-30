@@ -11,43 +11,71 @@ from flask import url_for
 
 import os
 
+from PIL import Image as PILImage
+
+def redimensionar_imagem(caminho_imagem, altura_maxima):
+    # Abra a imagem usando Pillow para obter as dimensões
+    img = PILImage.open(caminho_imagem)
+    largura_original, altura_original = img.size
+    
+    
+    
+    # Calcula a nova altura proporcional
+    proporcao = altura_maxima / altura_original
+    nova_largura = int(largura_original * proporcao)
+    
+    return nova_largura, altura_maxima
+
 # Configurando o arquivo PDF
-def make_pdf(tabela, cliente, valortotal, pdf_file):
+def make_pdf(tabela, cliente, valortotal):
     
     
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    logo_url = os.path.join(base_path, 'static', 'logo.png')
+    current_directory = os.getcwd()
+    logo_url = os.path.join(current_directory, 'static', 'logo.png')
+    pdf_url = os.path.join(current_directory, 'static', 'nota.pdf')
+    
+    
+    
+    print("Current Directory:", current_directory)
     
     
     
     
     
-    canvas = cv.Canvas(pdf_file, pagesize=A4)
+    canvas = cv.Canvas(pdf_url, pagesize=A4)
 
     
     
     tabela = tabelapdf.makeTable(tabela, valortotal)
 
-    imagem = Image(logo_url)  # Substitua pelo caminho da sua imagem
-    imagem.width = 200  # Largura da imagem
-    imagem.height = 120  # Altura da imagem
+    # imagem = Image(logo_url)  # Substitua pelo caminho da sua imagem
+    # print(imagem.imageWidth)
+    # print(imagem.imageHeight)
+    # imagem.imageWidth = int(imagem.imageWidth * 0.3)  # Largura da imagem
+    # imagem.imageHeight = int(imagem.imageHeight * 0.3)  # Altura da imagem
+    # print(imagem.imageWidth)
+    # print(imagem.imageHeight)
+    nova_altura = 120
 
+    nova_largura, nova_altura = redimensionar_imagem(logo_url, nova_altura)
     
+    print(nova_largura)
+    print(nova_altura)
 
     
     # Posicionar a imagem em coordenadas (x, y)
     x = 23  # coordenada x
     y = 692  # coordenada y
-    canvas.drawImage(logo_url, x, y, width=imagem.width, height=imagem.height)  # Desenhar a imagem
+    canvas.drawImage(logo_url, x, y, width=nova_largura, height=nova_altura)  # Desenhar a imagem
     
     
     #linha
     canvas.setStrokeColorRGB(0, 0, 0)  # Definindo a cor da linha (preto)
     canvas.setLineWidth(1)  # Definindo a espessura da linha
     canvas.line(30, 630, 565, 630)  # Linha da coordenada (100, 720) até (500, 720)
-    # canvas.line(30, 0, 30, 900)  # Linha da coordenada (100, 720) até (500, 720)
-    # canvas.line(565, 0, 565, 900)  # Linha da coordenada (100, 720) até (500, 720)
-    # canvas.line(30, 806, 565, 805)  # Linha da coordenada (100, 720) até (500, 720)
+    canvas.line(30, 0, 30, 900)  # Linha da coordenada (100, 720) até (500, 720)
+    canvas.line(565, 0, 565, 900)  # Linha da coordenada (100, 720) até (500, 720)
+    canvas.line(30, 806, 565, 805)  # Linha da coordenada (100, 720) até (500, 720)
     
     
     #nomecliente
@@ -97,6 +125,7 @@ def make_pdf(tabela, cliente, valortotal, pdf_file):
     
     
 
-    print(f"PDF '{pdf_file}' criado com sucesso.")
+    print(f"PDF criado com sucesso.")
     
-    return canvas
+    canvas.save()
+    
