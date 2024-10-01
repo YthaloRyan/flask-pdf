@@ -1,16 +1,13 @@
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import Table, TableStyle, Paragraph
+from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
-from reportlab.lib.units import cm
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet
 
 
 def makeTable(tabela, valortotal):
     # Dados da tabela (6 itens por linha)
     styles = getSampleStyleSheet()
-    normal_style = styles['Normal']
     
-    large_font_style = ParagraphStyle(name='LargeFont', fontSize=14)
     
     tabela_header = ['Data de Venda', 'Produtos', 'Quantidade', 'P. Unitário', 'SubTotal']
     tabela_footer = ['','','','Total',f'R$ {valortotal}']
@@ -23,18 +20,15 @@ def makeTable(tabela, valortotal):
     page_width = A4[0]
 
     # Define uma margem
-    margin = 30  # Margem de 20 pontos em cada lado
+    margin = 30
 
     # Largura da tabela com margens
     table_width = page_width - 2 * margin
-    print(table_width)
+    
     col_widths = [75,200,65,80,115]  # Largura igual para cada coluna
-    print(sum(col_widths))
-
-
     
 
-    
+
     # Cria a tabela com a largura das colunas
     table = Table(tabela, colWidths=col_widths)
 
@@ -50,8 +44,6 @@ def makeTable(tabela, valortotal):
         ('BOTTOMPADDING', (0, 0), (-1, -1), 6),  # Espaço embaixo do cabeçalho
         
         # Estilo do rodapé
-        
-        
         ('ALIGN', (0, -1), (-1, -1), 'CENTER'),  # Alinhamento do rodapé
         ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),  # Fonte em negrito no rodapé
         ('FONTSIZE', (0, -1), (-1, -1), 12),  # Tamanho da fonte no rodapé

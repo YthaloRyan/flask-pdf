@@ -1,131 +1,117 @@
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, Image
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 
-from reportlab.pdfgen import canvas as cv
+from reportlab.pdfgen import canvas
 
 from .tools.tabelapdf import tabelapdf
-
-from flask import url_for
+from .tools.coletar_dim_imagen import dimensoes_imagem as di
 
 import os
 
-from PIL import Image as PILImage
+from datetime import date
 
-def redimensionar_imagem(caminho_imagem, altura_maxima):
-    # Abra a imagem usando Pillow para obter as dimensões
-    img = PILImage.open(caminho_imagem)
-    largura_original, altura_original = img.size
-    
-    
-    
-    # Calcula a nova altura proporcional
-    proporcao = altura_maxima / altura_original
-    nova_largura = int(largura_original * proporcao)
-    
-    return nova_largura, altura_maxima
 
-# Configurando o arquivo PDF
-def make_pdf(tabela, cliente, valortotal):
-    
-    
-    current_directory = os.getcwd()
-    logo_url = os.path.join(current_directory, 'static', 'logo.png')
-    pdf_url = os.path.join(current_directory, 'static', 'nota.pdf')
-    
-    
-    
-    print("Current Directory:", current_directory)
-    
-    
-    
-    
-    
-    canvas = cv.Canvas(pdf_url, pagesize=A4)
-
-    
-    
-    tabela = tabelapdf.makeTable(tabela, valortotal)
-
-    # imagem = Image(logo_url)  # Substitua pelo caminho da sua imagem
-    # print(imagem.imageWidth)
-    # print(imagem.imageHeight)
-    # imagem.imageWidth = int(imagem.imageWidth * 0.3)  # Largura da imagem
-    # imagem.imageHeight = int(imagem.imageHeight * 0.3)  # Altura da imagem
-    # print(imagem.imageWidth)
-    # print(imagem.imageHeight)
-    nova_altura = 120
-
-    nova_largura, nova_altura = redimensionar_imagem(logo_url, nova_altura)
-    
-    print(nova_largura)
-    print(nova_altura)
-
-    
-    # Posicionar a imagem em coordenadas (x, y)
-    x = 23  # coordenada x
-    y = 692  # coordenada y
-    canvas.drawImage(logo_url, x, y, width=nova_largura, height=nova_altura)  # Desenhar a imagem
-    
-    
-    #linha
-    canvas.setStrokeColorRGB(0, 0, 0)  # Definindo a cor da linha (preto)
-    canvas.setLineWidth(1)  # Definindo a espessura da linha
-    canvas.line(30, 630, 565, 630)  # Linha da coordenada (100, 720) até (500, 720)
-    canvas.line(30, 0, 30, 900)  # Linha da coordenada (100, 720) até (500, 720)
-    canvas.line(565, 0, 565, 900)  # Linha da coordenada (100, 720) até (500, 720)
-    canvas.line(30, 806, 565, 805)  # Linha da coordenada (100, 720) até (500, 720)
-    
-    
-    #nomecliente
-    canvas.setFont("Helvetica", 20)
-    canvas.drawString(30, 650, f"Nome: {cliente}")
-    
-    
-    # Criando um objeto de texto
-    text = canvas.beginText()
-    text.setFont("Helvetica-Bold", 10)
-    text.setFillColor(colors.black)
-
-    # Adicionando várias linhas de texto
-    contatos = ['Fones: (88) 99711-6000', '(88) 99837-4888 / (88) 99720-1388',
-                'End: Rua G, nº 40 Bairro Cidade Nova / Tauá - CE']
-    # Definir a posição Y inicial (vertical)
-    
-    y_position = 797
-
-    # Para cada linha de texto, calcular a largura e centralizar
-    for linha in contatos:
-        # Calcular a largura da linha
-        text_width = canvas.stringWidth(linha, "Helvetica-Bold", 10)
+class makePdf():
+    def __init__(self, tabela, cliente, valortotal):
+        self.tabela = tabela
+        self.cliente = cliente
+        self.valortotal = valortotal
         
-        # Calcular a posição X para centralizar em relação à página
-        x_position = (898 - text_width) / 2
+        self.base_path = os.path.join(os.getcwd(), 'static')
+        self.logo_path = os.path.join(self.base_path, 'logo.png')
         
-        # Definir a origem do texto com base no cálculo acima
-        text.setTextOrigin(x_position, y_position)
+        self.pdf_path = os.path.join(self.base_path, 'nota.pdf')
         
-        # Adicionar a linha de texto
-        text.textLine(linha)
+        self.logo_altura_maxima = 120
         
-        # Ajustar a posição Y para a próxima linha (diminuir para mover para baixo)
-        y_position -= 20  # Ajuste a altura da linha conforme necessário
+        self.espacamento = 30
         
-    canvas.drawText(text)
+        self.contatos = ['Fones: (88) 99711-6000', '(88) 99837-4888 / (88) 99720-1388',
+                    'End: Rua G, nº 40 Bairro Cidade Nova / Tauá - CE']
+        
+    
+    def draw_image(self, x, y):
+        nova_largura, nova_altura = di.redimensionar_imagem_por_altura(self.logo_altura_maxima, self.logo_path)
+        
+        self.pdf.drawImage(self.logo_path, x, y, width=nova_largura, height=nova_altura)
     
     
+    def draw_string(self, font, size, text, y, x):
+        self.pdf.setFont(font, size)
+        self.pdf.drawString(x, y, text)
+        
+    def draw_string_list(self, font, size, string_list, y):
+        text = self.pdf.beginText()
+        text.setFont(font, size)
+        text.setFillColor(colors.black)
 
-    # Adicionar a tabela
-    tabela.wrapOn(canvas, 0, 0)
-    tabela.drawOn(canvas, 30, 75)  # Posicionar a tabela
+        maior_string = max(string_list, key=len)
+        maior_string_size = self.pdf.stringWidth(maior_string, font, size)
+        
+        y_position = y
+        
+        max_position = 1160 - self.espacamento - maior_string_size
 
-    # Gerar o PDF
+        for linha in string_list:
+            text_width = self.pdf.stringWidth(linha, font, size)
+            
+            # Calcular a posição X para centralizar em relação à página
+            x_position = (max_position - text_width) / 2
+            text.setTextOrigin(x_position, y_position)
+            
+            text.textLine(linha)
     
-    
-    
+            y_position -= 20
+            
+        self.pdf.drawText(text)
+        
+        
+    def draw_demarcador(self):
+        self.pdf.setStrokeColorRGB(0, 0, 0)
+        self.pdf.setLineWidth(1)
+        self.pdf.line(self.espacamento, 630, 565, 630)
+        self.pdf.line(self.espacamento, 0, 30, 900)
+        self.pdf.line(565, 0, 565, 900)
+        self.pdf.line(self.espacamento, 806, 565, 805)
 
-    print(f"PDF criado com sucesso.")
-    
-    canvas.save()
-    
+    def draw_divisoria(self, y):
+        self.pdf.setStrokeColorRGB(0, 0, 0)
+        self.pdf.setLineWidth(1)
+        self.pdf.line(self.espacamento, y, 595 - self.espacamento, y)
+        
+        
+    def start(self):
+        self.pdf = canvas.Canvas(self.pdf_path, pagesize=A4)
+        
+        # imagem
+        self.draw_image(x=23, y=692)
+        
+        
+        # linhas
+        # self.draw_demarcador()
+        self.draw_divisoria(y=630)
+        
+        
+        # nome do cliente
+        self.draw_string(font="Helvetica", size=20, text=f"Nome: {self.cliente}", y=650, x=self.espacamento)
+        
+        #data do pdf
+        data_atual = date.today()
+        data_em_texto = data_atual.strftime('%d/%m/%Y')
+        self.draw_string(font="Helvetica", size=20, text=data_em_texto, y=650, x=450)
+        
+        # lista de contatos
+        self.draw_string_list(font="Helvetica-Bold", size=10, string_list=self.contatos, y=797)
+        
+        
+        # tabela
+        pdf_tabela = tabelapdf.makeTable(self.tabela, self.valortotal)
+        pdf_tabela.wrapOn(self.pdf, 0, 0)
+        pdf_tabela.drawOn(self.pdf, self.espacamento, 75)  # Posicionar a tabela
+        
+        
+        self.pdf.save()
+        
+        print('Tabela salva')
+        

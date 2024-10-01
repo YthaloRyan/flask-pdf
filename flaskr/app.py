@@ -27,7 +27,7 @@ def submit_form():
     print(cliente)
     print('='*20)
     print(valortotal)
-    pdf.make_pdf(tabela=tabela, cliente=cliente, valortotal=valortotal)
+    pdf.makePdf(tabela=tabela, cliente=cliente, valortotal=valortotal).start()
     
     
     
