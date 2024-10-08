@@ -9,6 +9,7 @@
     font-size: 8px; /* Tamanho da fonte para os inputs */
     size: 8px;
     border-color: white;
+    
 }
 
 .total-cell {
@@ -28,4 +29,8 @@
 
 th {
     text-align: center; /* Centraliza o conteúdo */
+}
+
+input.form-control:not(#nome-cliente) {
+    border: 0;
 }

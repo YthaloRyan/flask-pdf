@@ -1,5 +1,5 @@
 body {
-    background: rgb(204,204,204); /* Cor de fundo da página */
+    
     margin: 0;
     padding: 0;
 }
@@ -24,4 +24,6 @@ body {
     left: 50%;
     
     transform: translate(-50%, -50%); /* Centraliza o elemento filho */
+
+    
 }

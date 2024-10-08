@@ -2,7 +2,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
-    
+
 {% endblock%}
 
 {% block content %}
@@ -13,21 +13,21 @@
     </head>
     <body>
         {% include 'pdf/topoa4.html' %}
-        
-        <br><br><br><br><br><br><br><br>
     </body>
     <footer>
         <form id="tabelaForm" onsubmit="handleSubmit(event)">
 
             <!-- nome do cliente -->
             <td style="width: 100px;">
-                <div class="input-group input-group-sm" >
+                <div class="input-group input-group-sm " >
                     <span class="input-group-text">Nome</span>
-                    <input type="text" name="nomeCliente" class="form-control" style="border-color: lightgray;" placeholder="Cliente">
+                    <input type="text" name="nomeCliente" class="form-control" id="nome-cliente" placeholder="Cliente">
                 </div>
             </td>
 
-            <table class="table-bordered table-responsive" id="tabelaProdutos">
+            <hr>
+
+            <table class="table-bordered table-responsive" style="text-align: center;" id="tabelaProdutos">
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -77,7 +77,7 @@
                             <td style="width: 130px;">
                                 <div class="input-group input-group-sm" id="subToDiv">
                                     <span class="input-group-text">R$</span>
-                                    <input type="text" name="subTo{{i}}" class="form-control"  placeholder="0,00"  value=0.00 readonly
+                                    <input type="text" name="subTo{{i}}" class="form-control"  placeholder="0,00"  value=0,00 readonly
                                     oninput="this.value = this.value.replace(/[a-zA-Z]+/g, ''); teclaAcionada('{{i}}')" id="subTo{{i}}"
                                     style="background-color: #f8f9fa;">
                                 </div>
@@ -87,7 +87,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4" class="total-cell" style="text-align: right;" >Total: </td>
+                        <td colspan="4" class="total-cell" style="text-align: right;" >Total : </td>
                         <td colspan="2" class="total-cell" id="valorTotaltd">0,00</td>
                         <input name="valorTotal" type="hidden" id="valorTotal">
                     </tr>

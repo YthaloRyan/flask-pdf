@@ -1,1 +1,56 @@
-<h1>Opa tudo bem</h1>
+{% extends "base.html" %}
+
+
+{% block head %}
+    <style>
+        .img-contatos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .container_image img {
+            max-width:500px;
+            max-height:200px;
+            width: auto;
+            height: auto;
+            padding-bottom: 15px;
+        }
+
+        .table_contatos {
+            text-align: center; /* Centraliza o conteúdo */
+            font-weight: bold; /* Deixa o texto em negrito */
+            font-size: 14px;
+        }
+    </style>
+    
+
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="img-contatos">
+        <div class="container_image">
+            <img src="{{ url_for('static', filename='logo.png')}}">
+        </div>
+    
+        <div>
+            <div>
+                <table class="table_contatos">
+                    {% for contato in contatos %}
+                        <tr>
+                            <td>{{contato}}</td>
+                        </tr>
+                        
+                    {% endfor %}
+                </table>
+            </div>
+        </div> 
+
+    </div>
+    
+    
+    
+    
+{% endblock %}

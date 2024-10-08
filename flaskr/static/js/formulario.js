@@ -53,6 +53,8 @@ const resetarCheckbox = (Id) => {
         subTo.value = '';
         
     }
+
+    calcularTotal();
 }
 
 

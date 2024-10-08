@@ -1,6 +1,5 @@
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.lib.units import cm
 
 from reportlab.pdfgen import canvas
 
@@ -13,7 +12,7 @@ from datetime import date
 
 
 class makePdf():
-    def __init__(self, tabela, cliente, valortotal):
+    def __init__(self, tabela, cliente, valortotal, contatos):
         self.tabela = tabela
         self.cliente = cliente
         self.valortotal = valortotal
@@ -27,8 +26,7 @@ class makePdf():
         
         self.espacamento = 30
         
-        self.contatos = ['Fones: (88) 99711-6000', '(88) 99837-4888 / (88) 99720-1388',
-                    'End: Rua G, nº 40 Bairro Cidade Nova / Tauá - CE']
+        self.contatos = contatos
         
     
     def draw_image(self, x, y):

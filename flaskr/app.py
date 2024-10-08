@@ -1,14 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, jsonify
 from core import organizar_infos
 from core.pdfmaker import pdf
 
-import time
+contatos = ['Fones: (88) 99711-6000', '(88) 99837-4888 / (88) 99720-1388',
+                    'End: Rua G, nº 40 Bairro Cidade Nova / Tauá - CE']
 
 app = Flask(__name__)
 
 @app.route('/')
 def form():
-    return render_template('pdf/a4.html')
+    return render_template('pdf/a4.html', contatos=contatos)
         
     
 @app.route('/submit_form', methods=['POST'])
@@ -21,31 +22,10 @@ def submit_form():
     cliente = infos['nomeCliente']
     valortotal = infos['valorTotal']
     
-    
-    print(tabela)
-    print('='*20)
-    print(cliente)
-    print('='*20)
-    print(valortotal)
-    pdf.makePdf(tabela=tabela, cliente=cliente, valortotal=valortotal).start()
-    
-    
-    
+    pdf.makePdf(tabela=tabela, cliente=cliente, valortotal=valortotal, contatos=contatos).start()
     
     
     return jsonify(message='Pdf Gerado')
-
-
-
-
-
-
-
-@app.route('/teste')
-def teste():
-    return render_template('teste.html')
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
