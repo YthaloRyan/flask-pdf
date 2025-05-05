@@ -39,7 +39,7 @@ def makeTable(tabela, valortotal):
         ('FONTSIZE', (0, 0), (-1, 0), 10),  # Tamanho da fonte
         ('FONTSIZE', (1, 1), (-1, -1), 10),  # Tamanho da fonte
         ('BACKGROUND', (0, 0), (-1, -1), colors.white),  # Fundo das células em bege
-        ('GRID', (0, 0), (-1, -1), 0.2, colors.lightgrey),  # Adiciona linhas entre as células
+        ('GRID', (0, 0), (-1, -1), 1.5, colors.lightgrey),  # Adiciona linhas entre as células
         ('TOPPADDING', (0, 0), (-1, -1), 6),  # Espaço em cima do cabeçalho
         ('BOTTOMPADDING', (0, 0), (-1, -1), 6),  # Espaço embaixo do cabeçalho
         
